@@ -2,23 +2,43 @@ import React, { useState } from "react";
 import QuestionCard from "./components/QuestionCard";
 import QuestioCard from "./components/QuestionCard";
 import { fetchQuizQuestions } from "./Api";
-import { difficulty } from "./Api";
+import { QuestionState, difficulty } from "./Api";
+
+type AnswerObject = {
+  question: string;
+  answer: string;
+  correct: boolean;
+  correctAnswer: string;
+};
 const TOTAL_QUESTIONS = 10;
 const App = () => {
   const [loading, setLoading] = useState(false);
-  const [questions, setquestions] = useState([]);
+  const [questions, setquestions] = useState<QuestionState[]>([]);
   const [number, setnumber] = useState(0);
-  const [userAnswers, setuserAnswers] = useState([]);
+  const [userAnswers, setuserAnswers] = useState<AnswerObject[]>([]);
   const [score, setscore] = useState(0);
   const [gameOver, setgameOver] = useState(true);
 
-  const startTrivia = async () => {};
+  const startTrivia = async () => {
+    setLoading(true);
+    setgameOver(false);
+
+    const newQuestions = await fetchQuizQuestions(
+      TOTAL_QUESTIONS,
+      difficulty.EASY
+    );
+    setquestions(newQuestions);
+    setscore(0);
+    setuserAnswers([]);
+    setnumber(0);
+    setLoading(false);
+  };
 
   const checkAnswer = (e: React.MouseEvent<HTMLButtonElement>) => {};
 
   const nextQuestion = () => {};
 
-  console.log(fetchQuizQuestions(TOTAL_QUESTIONS, difficulty.EASY));
+  console.log(questions);
   return (
     <div className="App">
       <h1>Quiz</h1>
